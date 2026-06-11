@@ -1,0 +1,50 @@
+<div class="container mt-4">
+    <h3>Chat - Veículo #<%= veiculoId %></h3>
+    <div id="chat-box" class="border p-3 mb-3" style="height: 400px; overflow-y: auto; background:#f8f9fa">
+        <% mensagens.forEach(m => { %>
+            <div class="mb-2">
+                <small><strong><%= m.sender_type %></strong> - <%= new Date(m.created_at).toLocaleString() %></small>
+                <div><%= m.mensagem %></div>
+            </div>
+        <% }) %>
+    </div>
+
+    <form id="chat-form">
+        <div class="form-group">
+            <textarea id="message-input" class="form-control" rows="3" placeholder="Escreva sua mensagem..."></textarea>
+        </div>
+        <button class="btn btn-primary" id="send-btn">Enviar</button>
+    </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const conversaId = <%= conversa.id %>;
+    const veiculoId = <%= veiculoId %>;
+    const user = <%= JSON.stringify(user || null) %>;
+
+    socket.emit('join_conversa', conversaId);
+
+    const chatBox = document.getElementById('chat-box');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('message-input');
+
+    socket.on('new_message', (data) => {
+        if (data.conversa_id !== conversaId) return;
+        const el = document.createElement('div');
+        el.className = 'mb-2';
+        el.innerHTML = `<small><strong>${data.sender_type}</strong> - ${new Date(data.created_at).toLocaleString()}</small><div>${data.mensagem}</div>`;
+        chatBox.appendChild(el);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        const payload = { conversa_id: conversaId, sender_type: user ? 'user' : 'visitante', sender_id: user ? user.id : null, mensagem: text };
+        socket.emit('send_message', payload);
+        input.value = '';
+    });
+</script>

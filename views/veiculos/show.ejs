@@ -1,0 +1,47 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="gallery" class="mb-3">
+                <% if (fotos && fotos.length) { %>
+                    <div class="card">
+                        <img src="/<%= fotos[0].file_path %>" class="img-fluid" alt="Foto principal">
+                    </div>
+                <% } else { %>
+                    <div class="card">
+                        <img src="/uploads/default-car.jpg" class="img-fluid" alt="Sem foto">
+                    </div>
+                <% } %>
+            </div>
+
+            <h2><%= veiculo.marca %> <%= veiculo.modelo %> - <%= veiculo.versao %></h2>
+            <p><strong>Ano:</strong> <%= veiculo.ano %> / <strong>Ano modelo:</strong> <%= veiculo.ano_modelo %></p>
+            <p><strong>Quilometragem:</strong> <%= veiculo.quilometragem %> km</p>
+            <p><strong>Combustível:</strong> <%= veiculo.combustivel %> | <strong>Câmbio:</strong> <%= veiculo.cambio %></p>
+            <h3 class="text-success">R$ <%= veiculo.preco %></h3>
+
+            <hr>
+            <h4>Descrição</h4>
+            <p><%= veiculo.descricao %></p>
+
+            <hr>
+            <a href="/veiculos" class="btn btn-secondary">Voltar</a>
+            <% if (user && user.role === 'admin') { %>
+                <a href="/veiculos/<%= veiculo.id %>/edit" class="btn btn-warning">Editar</a>
+            <% } %>
+            <a href="/chat/veiculo/<%= veiculo.id %>" class="btn btn-success">Tenho interesse</a>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Informações</h5>
+                <ul class="list-unstyled">
+                    <li><strong>Cor:</strong> <%= veiculo.cor %></li>
+                    <li><strong>Motorização:</strong> <%= veiculo.motorizacao %></li>
+                    <li><strong>Portas:</strong> <%= veiculo.portas %></li>
+                    <li><strong>Tipo:</strong> <%= veiculo.tipo_veiculo %></li>
+                    <li><strong>Situação:</strong> <%= veiculo.situacao %></li>
+                </ul>
+                <a href="#" class="btn btn-success btn-block">Contato / WhatsApp</a>
+            </div>
+        </div>
+    </div>
+</div>

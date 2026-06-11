@@ -1,0 +1,46 @@
+<div class="container mt-4">
+    <h1>Adicionar Veículo</h1>
+    <form action="/veiculos" method="POST" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Marca</label>
+                <input name="marca" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Modelo</label>
+                <input name="modelo" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>Ano</label>
+                <input name="ano" type="number" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Ano modelo</label>
+                <input name="ano_modelo" type="number" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Portas</label>
+                <input name="portas" type="number" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea name="descricao" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Preço</label>
+            <input name="preco" type="number" step="0.01" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Fotos (múltiplas)</label>
+            <input type="file" name="photos" multiple class="form-control-file">
+        </div>
+
+        <button class="btn btn-primary">Salvar</button>
+    </form>
+</div>

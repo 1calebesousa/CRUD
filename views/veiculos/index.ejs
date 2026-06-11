@@ -1,0 +1,28 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Catálogo de Veículos</h1>
+        <div>
+            <% if (user && user.role === 'admin') { %>
+                <a href="/veiculos/new" class="btn btn-success">Adicionar veículo</a>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="row">
+        <% veiculos.forEach(v => { %>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <% if (v.id) { %>
+                        <img src="/uploads/default-car.jpg" class="card-img-top" alt="Foto">
+                    <% } %>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= v.marca %> <%= v.modelo %></h5>
+                        <p class="card-text text-truncate"><%= v.descricao || '' %></p>
+                        <p class="font-weight-bold">R$ <%= v.preco %></p>
+                        <a href="/veiculos/<%= v.id %>" class="btn btn-primary">Ver detalhes</a>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="container mt-4">
+    <h1>Editar Veículo</h1>
+    <form action="/veiculos/<%= veiculo.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Marca</label>
+                <input name="marca" value="<%= veiculo.marca %>" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Modelo</label>
+                <input name="modelo" value="<%= veiculo.modelo %>" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea name="descricao" class="form-control" rows="4"><%= veiculo.descricao %></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Fotos adicionais</label>
+            <input type="file" name="photos" multiple class="form-control-file">
+        </div>
+
+        <button class="btn btn-primary">Atualizar</button>
+    </form>
+
+    <hr>
+    <h3>Fotos existentes</h3>
+    <div class="row">
+        <% fotos.forEach(f => { %>
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <img src="/<%= f.file_path %>" class="img-fluid">
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>

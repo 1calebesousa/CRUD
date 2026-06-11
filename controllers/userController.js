@@ -1,18 +1,26 @@
 const User = require('../models/userModel');
+const bcrypt = require('bcrypt');
+
+const SALT_ROUNDS = 10;
 
 const userController = {
     createUser: (req, res) => {
-        const newUser = {
-            username: req.body.username,
-            password: req.body.password,
-            role: req.body.role,
-        };
+        const rawPassword = req.body.password || '';
+        bcrypt.hash(rawPassword, SALT_ROUNDS, (err, hashed) => {
+            if (err) return res.status(500).json({ error: 'Erro ao hashear senha' });
 
-        User.create(newUser, (err, userId) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/users');
+            const newUser = {
+                username: req.body.username,
+                password: hashed,
+                role: req.body.role,
+            };
+
+            User.create(newUser, (err2, userId) => {
+                if (err2) {
+                    return res.status(500).json({ error: err2 });
+                }
+                res.redirect('/users');
+            });
         });
     },
 
@@ -59,18 +67,36 @@ const userController = {
 
     updateUser: (req, res) => {
         const userId = req.params.id;
-        const updatedUser = {
-            username: req.body.username,
-            password: req.body.password,
-            role: req.body.role,
-        };
+        const rawPassword = req.body.password || null;
 
-        User.update(userId, updatedUser, (err) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/users');
-        });
+        function finishUpdate(passwordToSave) {
+            const updatedUser = {
+                username: req.body.username,
+                password: passwordToSave,
+                role: req.body.role,
+            };
+
+            User.update(userId, updatedUser, (err) => {
+                if (err) {
+                    return res.status(500).json({ error: err });
+                }
+                res.redirect('/users');
+            });
+        }
+
+        if (rawPassword) {
+            bcrypt.hash(rawPassword, SALT_ROUNDS, (err, hashed) => {
+                if (err) return res.status(500).json({ error: 'Erro ao hashear senha' });
+                finishUpdate(hashed);
+            });
+        } else {
+            // preserva password atual se não informado (recuperar do DB)
+            User.findById(userId, (err, user) => {
+                if (err) return res.status(500).json({ error: err });
+                if (!user) return res.status(404).json({ message: 'User not found' });
+                finishUpdate(user.password);
+            });
+        }
     },
 
     deleteUser: (req, res) => {
