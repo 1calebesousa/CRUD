@@ -25,10 +25,22 @@ const authController = {
                 const payload = { id: user.id, username: user.username, role: user.role };
                 const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
-                // Retornar token em JSON. O frontend/admin pode armazenar em localStorage ou cookie.
+                // Definir token no cookie httpOnly
+                res.cookie('token', token, { httpOnly: true, maxAge: 8 * 3600 * 1000 });
+
+                // Se for navegação por formulário HTML padrão, redireciona para a Dashboard
+                if (req.accepts('html') && !req.xhr && !req.headers['content-type']?.includes('json')) {
+                    return res.redirect('/admin/dashboard');
+                }
+
                 res.json({ token, user: payload });
             });
         });
+    },
+
+    logout: (req, res) => {
+        res.clearCookie('token');
+        res.redirect('/auth/login');
     }
 };
 

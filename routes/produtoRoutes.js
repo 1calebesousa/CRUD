@@ -1,6 +1,9 @@
 const express = require('express');
 const produtoController = require('../controllers/produtoController');
+const { authenticateJWT } = require('../middleware/authMiddleware');
 const router = express.Router();
+
+router.use(authenticateJWT);
 
 router.get('/', produtoController.getAllProdutos);
 router.get('/new', produtoController.renderCreateForm);
