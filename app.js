@@ -14,6 +14,7 @@ const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 
 const cookieParser = require('cookie-parser');
+const { setUserIfAuthenticated } = require('./middleware/authMiddleware');
 
 dotenv.config();
 
@@ -29,13 +30,39 @@ app.set('views', __dirname + '/views');
 app.use(expressLayouts);
 
 // Security headers
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    "https://code.jquery.com",
+                    "https://cdn.jsdelivr.net",
+                    "https://maxcdn.bootstrapcdn.com"
+                ],
+                styleSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    "https://maxcdn.bootstrapcdn.com"
+                ],
+                imgSrc: ["'self'", "data:", "blob:"],
+                connectSrc: ["'self'", "ws:", "wss:"]
+            }
+        }
+    })
+);
 
 // Rate limiting (basic)
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200 });
 app.use(limiter);
 
+const flashMiddleware = require('./middleware/flashMiddleware');
+
 app.use(cookieParser());
+app.use(flashMiddleware);
+app.use(setUserIfAuthenticated);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));

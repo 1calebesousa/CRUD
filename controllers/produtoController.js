@@ -15,8 +15,10 @@ const produtoController = {
 
         Produto.create(newProduto, (err, produtoId) => {
             if (err) {
-                return res.status(500).json({ error: err });
+                res.flash('error', 'Erro ao criar produto.');
+                return res.redirect('/produtos/new');
             }
+            res.flash('success', 'Produto criado com sucesso.');
             res.redirect('/produtos');
         });
     },
@@ -93,8 +95,10 @@ const produtoController = {
 
         Produto.update(produtoId, updatedProduto, (err) => {
             if (err) {
-                return res.status(500).json({ error: err });
+                res.flash('error', 'Erro ao atualizar produto.');
+                return res.redirect('/produtos');
             }
+            res.flash('success', 'Produto atualizado com sucesso.');
             res.redirect('/produtos');
         });
     },
@@ -104,8 +108,10 @@ const produtoController = {
 
         Produto.delete(produtoId, (err) => {
             if (err) {
-                return res.status(500).json({ error: err });
+                res.flash('error', 'Erro ao excluir produto.');
+                return res.redirect('/produtos');
             }
+            res.flash('success', 'Produto removido com sucesso.');
             res.redirect('/produtos');
         });
     }

@@ -8,8 +8,10 @@ const categoriaController = {
 
         Categoria.create(newCategoria, (err, categoriaId) => {
             if (err) {
-                return res.status(500).json({ error: err });
+                res.flash('error', 'Erro ao criar categoria.');
+                return res.redirect('/categorias/new');
             }
+            res.flash('success', 'Categoria criada com sucesso.');
             res.redirect('/categorias');
         });
     },
@@ -63,8 +65,10 @@ const categoriaController = {
 
         Categoria.update(categoriaId, updatedCategoria, (err) => {
             if (err) {
-                return res.status(500).json({ error: err });
+                res.flash('error', 'Erro ao atualizar categoria.');
+                return res.redirect('/categorias');
             }
+            res.flash('success', 'Categoria atualizada com sucesso.');
             res.redirect('/categorias');
         });
     },
@@ -74,8 +78,10 @@ const categoriaController = {
 
         Categoria.delete(categoriaId, (err) => {
             if (err) {
-                return res.status(500).json({ error: err });
+                res.flash('error', 'Erro ao excluir categoria.');
+                return res.redirect('/categorias');
             }
+            res.flash('success', 'Categoria removida com sucesso.');
             res.redirect('/categorias');
         });
     }

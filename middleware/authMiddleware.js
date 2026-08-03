@@ -30,6 +30,27 @@ function authenticateJWT(req, res, next) {
     });
 }
 
+function setUserIfAuthenticated(req, res, next) {
+    const authHeader = req.headers.authorization || req.headers.Authorization || '';
+    let token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (!token && req.cookies && req.cookies.token) {
+        token = req.cookies.token;
+    }
+
+    if (token) {
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+            if (!err && decoded) {
+                req.user = decoded;
+                res.locals.user = decoded;
+            }
+            next();
+        });
+    } else {
+        next();
+    }
+}
+
 function isAdmin(req, res, next) {
     if (!req.user) {
         if (req.accepts('html') && !req.xhr) return res.redirect('/auth/login');
@@ -42,4 +63,4 @@ function isAdmin(req, res, next) {
     next();
 }
 
-module.exports = { authenticateJWT, isAdmin };
+module.exports = { authenticateJWT, setUserIfAuthenticated, isAdmin };
