@@ -7,18 +7,23 @@ const userController = {
     createUser: (req, res) => {
         const rawPassword = req.body.password || '';
         bcrypt.hash(rawPassword, SALT_ROUNDS, (err, hashed) => {
-            if (err) return res.status(500).json({ error: 'Erro ao hashear senha' });
-
-            const newUser = {
-                username: req.body.username,
-                password: hashed,
-                role: req.body.role,
-            };
+    if (err) {
+        res.flash('error', 'Erro ao hashear senha ao criar usuário.');
+        return res.redirect('/users/create');
+    }
+    const newUser = {
+        username: req.body.username,
+        password: hashed,
+        role: req.body.role,
+    };
 
             User.create(newUser, (err2, userId) => {
                 if (err2) {
-                    return res.status(500).json({ error: err2 });
+                    res.flash('error', err2.message || 'Erro ao criar usuário.');
+                return res.redirect('/users/create');
                 }
+
+                res.flash('success', 'Usuário criado com sucesso.');
                 res.redirect('/users');
             });
         });
@@ -78,15 +83,18 @@ const userController = {
 
             User.update(userId, updatedUser, (err) => {
                 if (err) {
-                    return res.status(500).json({ error: err });
+                    res.flash('error', err.message || 'Erro ao atualizar usuário.');
+                return res.redirect('/users');
                 }
+                res.flash('success', 'Usuário atualizado com sucesso.');
                 res.redirect('/users');
             });
         }
 
         if (rawPassword) {
             bcrypt.hash(rawPassword, SALT_ROUNDS, (err, hashed) => {
-                if (err) return res.status(500).json({ error: 'Erro ao hashear senha' });
+            res.flash('error', 'Erro ao hashear senha ao atualizar usuário.');
+            return res.redirect('/users');
                 finishUpdate(hashed);
             });
         } else {
@@ -106,6 +114,7 @@ const userController = {
             if (err) {
                 return res.status(500).json({ error: err });
             }
+            res.flash('success', 'Usuário removido com sucesso.');
             res.redirect('/users');
         });
     },
