@@ -25,8 +25,8 @@
                 <td>
                     <a href="/users/<%= user.id %>" class="btn btn-primary">View</a>
                     <a href="/users/<%= user.id %>/edit" class="btn btn-warning">Edit</a>
-                    <form action="/users/<%= user.id %>?_method=DELETE" method="POST" style="display: inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-danger delete-btn" data-url="/users/<%= user.id %>?_method=DELETE">Excluir</button>
+                        <button type="submit" class="btn btn-danger">Excluir</button>
                     </form>
                 </td>
             </tr>
