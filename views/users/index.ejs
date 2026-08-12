@@ -3,7 +3,8 @@
 <form id="searchForm" method="GET" action="/users">
     <div class="form-group">
         <label for="search">Buscar Usuário:</label>
-        <input type="text" id="search" name="search" class="form-control" placeholder="Digite o nome do usuário" autocomplete="off">
+        <input type="text" id="search" name="search" class="form-control" placeholder="Digite o nome do usuário"
+            autocomplete="off">
     </div>
 </form>
 
@@ -17,25 +18,32 @@
         </tr>
     </thead>
     <tbody id="userTableBody">
-        <% users.forEach(user => { %>
+        <% users.forEach(user=> { %>
             <tr>
-                <td><%= user.id %></td>
-                <td><%= user.username %></td>
-                <td><%= user.role %></td>
+                <td>
+                    <%= user.id %>
+                </td>
+                <td>
+                    <%= user.username %>
+                </td>
+                <td>
+                    <%= user.role %>
+                </td>
                 <td>
                     <a href="/users/<%= user.id %>" class="btn btn-primary">View</a>
                     <a href="/users/<%= user.id %>/edit" class="btn btn-warning">Edit</a>
-                    <button type="button" class="btn btn-danger delete-btn" data-url="/users/<%= user.id %>?_method=DELETE">Excluir</button>
-                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    <button type="button" class="btn btn-danger delete-btn"
+                        data-url="/users/<%= user.id %>?_method=DELETE">Excluir</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
                     </form>
                 </td>
             </tr>
-        <% }) %>
+            <% }) %>
     </tbody>
 </table>
 
 <script>
-    document.getElementById('search').addEventListener('input', function() {
+    document.getElementById('search').addEventListener('input', function () {
         const searchValue = this.value;
 
         fetch(`/users/search?search=${encodeURIComponent(searchValue)}`)
@@ -51,11 +59,9 @@
                         <td>${user.username}</td>
                         <td>${user.role}</td>
                         <td>
-                            <a href="/users/${user.id}" class="btn btn-primary">View</a>
-                            <a href="/users/${user.id}/edit" class="btn btn-warning">Edit</a>
-                            <form action="/users/${user.id}?_method=DELETE" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                            <a href="/users/<%= user.id %>" class="btn btn-primary">View</a>
+                    <a href="/users/<%= user.id %>/edit" class="btn btn-warning">Edit</a>
+                    <button type="button" class="btn btn-danger delete-btn" data-url="/users/<%= user.id %>?_method=DELETE">Excluir</button>        </form>
                         </td>
                     `;
                     tbody.appendChild(tr);
